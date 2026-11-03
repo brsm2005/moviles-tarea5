@@ -125,6 +125,7 @@ Ejemplos:
 - Regla de contraseña aplicada en registro y cambio: mínimo 6 caracteres, una mayúscula, una minúscula y un número.
 - Login robusto: getSession espera authStateReady con timeout de 5 s y login usa timeout de 15 s; si no hay red o Firebase no responde, el botón deja de girar y se muestra un mensaje claro.
 - Indicador de seguridad de contraseña: password-strength-indicator.tsx con barra animada (débil/media/fuerte) y cálculo en calcularFortalezaContrasena(); visible en registro y nueva contraseña.
+- UI con Uniwind (Tailwind CSS v4): global.css con tokens EPMAPS y tipografías Roboto, metro.config.js con withUniwindConfig, SafeAreaListener en _layout; todas las pantallas usan className (sin StyleSheet) y las clases compartidas de auth están en auth-classes.ts (ADR-009).
 
 ---
 

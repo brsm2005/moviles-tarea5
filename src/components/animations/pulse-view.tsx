@@ -14,11 +14,12 @@ import Animated, {
 interface Props {
   active: boolean;
   children: ReactNode;
+  className?: string;
   style?: StyleProp<ViewStyle>;
 }
 
 /** Pulso suave para indicadores de estado (sin red / pendientes). */
-export function PulseView({ active, children, style }: Props) {
+export function PulseView({ active, children, className, style }: Props) {
   const opacity = useSharedValue(1);
   const scale = useSharedValue(1);
 
@@ -53,5 +54,9 @@ export function PulseView({ active, children, style }: Props) {
     transform: [{ scale: scale.value }],
   }));
 
-  return <Animated.View style={[style, animatedStyle]}>{children}</Animated.View>;
+  return (
+    <Animated.View className={className} style={[style, animatedStyle]}>
+      {children}
+    </Animated.View>
+  );
 }

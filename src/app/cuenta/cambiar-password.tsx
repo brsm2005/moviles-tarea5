@@ -6,7 +6,7 @@ import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { appAlert } from '@/components/app-alert';
 import { AnimatedSpinner } from '@/components/animations/animated-spinner';
 import { AuthScreen } from '@/components/auth/auth-screen';
-import { AUTH_COLORS, authStyles } from '@/components/auth/auth-styles';
+import { authClass } from '@/components/auth/auth-classes';
 import { PasswordField } from '@/components/auth/password-field';
 import { PasswordRequirements } from '@/components/auth/password-requirements';
 import { IndicadorSeguridadContrasena } from '@/components/auth/password-strength-indicator';
@@ -53,8 +53,8 @@ export default function CambiarContrasenaScreen() {
 
   if (session === undefined) {
     return (
-      <View style={[authStyles.screen, { alignItems: 'center', justifyContent: 'center' }]}>
-        <AnimatedSpinner size={48} color={AUTH_COLORS.primary} />
+      <View className="flex-1 bg-background items-center justify-center">
+        <AnimatedSpinner size={48} />
       </View>
     );
   }
@@ -67,15 +67,15 @@ export default function CambiarContrasenaScreen() {
       subtitle="Actualiza la contraseña de tu cuenta. Por seguridad debes confirmar tu contraseña actual."
       headerSubtitle="Mi cuenta"
       footer={
-        <Pressable style={authStyles.footer} onPress={() => router.replace('/busqueda' as never)}>
-          <Text style={authStyles.footerText}>
-            <Text style={authStyles.footerLink}>Volver a la búsqueda</Text>
+        <Pressable className={authClass.footer} onPress={() => router.replace('/busqueda' as never)}>
+          <Text className={authClass.footerText}>
+            <Text className={authClass.footerLink}>Volver a la búsqueda</Text>
           </Text>
         </Pressable>
       }>
-      <View style={authStyles.sessionBox}>
-        <Text style={authStyles.sessionLabel}>Sesión activa</Text>
-        <Text style={authStyles.sessionValue}>{session.email}</Text>
+      <View className={authClass.sessionBox}>
+        <Text className={authClass.sessionLabel}>Sesión activa</Text>
+        <Text className={authClass.sessionValue}>{session.email}</Text>
       </View>
 
       <form.Field
@@ -85,8 +85,8 @@ export default function CambiarContrasenaScreen() {
           onSubmit: ({ value }) => (!value ? 'Ingresa tu contraseña actual' : undefined),
         }}>
         {(field) => (
-          <View style={authStyles.group}>
-            <Text style={authStyles.label}>Contraseña actual</Text>
+          <View className={authClass.group}>
+            <Text className={authClass.label}>Contraseña actual</Text>
             <PasswordField
               hasError={field.state.meta.errors.length > 0}
               value={field.state.value}
@@ -98,8 +98,8 @@ export default function CambiarContrasenaScreen() {
             />
             {(field.state.meta.isTouched || form.state.submissionAttempts > 0) &&
               field.state.meta.errors.length > 0 && (
-              <Text style={authStyles.error}>{String(field.state.meta.errors[0])}</Text>
-            )}
+                <Text className={authClass.error}>{String(field.state.meta.errors[0])}</Text>
+              )}
           </View>
         )}
       </form.Field>
@@ -125,8 +125,8 @@ export default function CambiarContrasenaScreen() {
           },
         }}>
         {(field) => (
-          <View style={authStyles.group}>
-            <Text style={authStyles.label}>Nueva contraseña</Text>
+          <View className={authClass.group}>
+            <Text className={authClass.label}>Nueva contraseña</Text>
             <PasswordField
               hasError={field.state.meta.errors.length > 0}
               value={field.state.value}
@@ -141,8 +141,8 @@ export default function CambiarContrasenaScreen() {
             />
             {(field.state.meta.isTouched || form.state.submissionAttempts > 0) &&
               field.state.meta.errors.length > 0 && (
-              <Text style={authStyles.error}>{String(field.state.meta.errors[0])}</Text>
-            )}
+                <Text className={authClass.error}>{String(field.state.meta.errors[0])}</Text>
+              )}
             <PasswordRequirements value={field.state.value} />
           </View>
         )}
@@ -167,8 +167,8 @@ export default function CambiarContrasenaScreen() {
           },
         }}>
         {(field) => (
-          <View style={authStyles.group}>
-            <Text style={authStyles.label}>Confirmar nueva contraseña</Text>
+          <View className={authClass.group}>
+            <Text className={authClass.label}>Confirmar nueva contraseña</Text>
             <PasswordField
               hasError={field.state.meta.errors.length > 0}
               value={field.state.value}
@@ -180,8 +180,8 @@ export default function CambiarContrasenaScreen() {
             />
             {(field.state.meta.isTouched || form.state.submissionAttempts > 0) &&
               field.state.meta.errors.length > 0 && (
-              <Text style={authStyles.error}>{String(field.state.meta.errors[0])}</Text>
-            )}
+                <Text className={authClass.error}>{String(field.state.meta.errors[0])}</Text>
+              )}
           </View>
         )}
       </form.Field>
@@ -189,17 +189,13 @@ export default function CambiarContrasenaScreen() {
       <form.Subscribe selector={(s) => [s.canSubmit, s.isSubmitting] as const}>
         {([canSubmit, isSubmitting]) => (
           <Pressable
-            style={({ pressed }) => [
-              authStyles.button,
-              (!canSubmit || isSubmitting) && authStyles.buttonDisabled,
-              pressed && { opacity: 0.85 },
-            ]}
+            className={authClass.button}
             disabled={!canSubmit || isSubmitting}
             onPress={() => form.handleSubmit()}>
             {isSubmitting ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator colorClassName="accent-white" />
             ) : (
-              <Text style={authStyles.buttonText}>Actualizar contraseña</Text>
+              <Text className={authClass.buttonText}>Actualizar contraseña</Text>
             )}
           </Pressable>
         )}

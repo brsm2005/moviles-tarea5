@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import {
   PASSWORD_MIN_LENGTH,
@@ -17,33 +17,23 @@ export function PasswordRequirements({ value }: { value: string }) {
   const checks = obtenerChecksContrasena(value);
 
   return (
-    <View style={styles.box}>
+    <View className="mt-2 p-3 rounded-xl bg-background border border-border gap-1.5">
       {REGLAS.map((regla) => {
         const ok = checks[regla.clave];
         return (
-          <View key={regla.clave} style={styles.row}>
-            <Text style={[styles.icon, ok && styles.iconOk]}>{ok ? '✓' : '○'}</Text>
-            <Text style={[styles.text, ok && styles.textOk]}>{regla.etiqueta}</Text>
+          <View key={regla.clave} className="flex-row items-center gap-2">
+            <Text
+              className={`font-roboto-bold text-sm w-4 ${
+                ok ? 'text-green-600' : 'text-slate-400'
+              }`}>
+              {ok ? '✓' : '○'}
+            </Text>
+            <Text className={`font-roboto text-[13px] ${ok ? 'text-green-800' : 'text-muted'}`}>
+              {regla.etiqueta}
+            </Text>
           </View>
         );
       })}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  box: {
-    marginTop: 8,
-    padding: 12,
-    borderRadius: 12,
-    backgroundColor: '#F8FAFC',
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-    gap: 6,
-  },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  icon: { fontFamily: 'Roboto_700Bold', fontSize: 14, color: '#94A3B8', width: 16 },
-  iconOk: { color: '#16A34A' },
-  text: { fontFamily: 'Roboto_400Regular', fontSize: 13, color: '#64748B' },
-  textOk: { color: '#166534' },
-});

@@ -5,7 +5,7 @@ import { ActivityIndicator, Pressable, Text, TextInput, View } from 'react-nativ
 
 import { appAlert } from '@/components/app-alert';
 import { AuthScreen } from '@/components/auth/auth-screen';
-import { authStyles } from '@/components/auth/auth-styles';
+import { authClass } from '@/components/auth/auth-classes';
 import { PasswordField } from '@/components/auth/password-field';
 import { PasswordRequirements } from '@/components/auth/password-requirements';
 import { IndicadorSeguridadContrasena } from '@/components/auth/password-strength-indicator';
@@ -49,12 +49,10 @@ export default function RegistroScreen() {
       subtitle="Registra tu correo electrónico y una contraseña segura para acceder a EPMAPS Campo."
       headerSubtitle="Registro"
       footer={
-        <Pressable
-          style={authStyles.footer}
-          onPress={() => router.replace('/' as never)}>
-          <Text style={authStyles.footerText}>
+        <Pressable className={authClass.footer} onPress={() => router.replace('/' as never)}>
+          <Text className={authClass.footerText}>
             ¿Ya tienes una cuenta?{' '}
-            <Text style={authStyles.footerLink}>Inicia sesión</Text>
+            <Text className={authClass.footerLink}>Inicia sesión</Text>
           </Text>
         </Pressable>
       }>
@@ -65,13 +63,12 @@ export default function RegistroScreen() {
           onSubmit: ({ value }) => validarEmail(value),
         }}>
         {(field) => (
-          <View style={authStyles.group}>
-            <Text style={authStyles.label}>Correo electrónico</Text>
+          <View className={authClass.group}>
+            <Text className={authClass.label}>Correo electrónico</Text>
             <TextInput
-              style={[
-                authStyles.input,
-                field.state.meta.errors.length > 0 && authStyles.inputError,
-              ]}
+              className={
+                field.state.meta.errors.length > 0 ? authClass.inputError : authClass.input
+              }
               value={field.state.value}
               onChangeText={field.handleChange}
               onBlur={field.handleBlur}
@@ -81,12 +78,12 @@ export default function RegistroScreen() {
               autoComplete="email"
               textContentType="emailAddress"
               placeholder="tecnico@epmaps.gob.ec"
-              placeholderTextColor="#94A3B8"
+              placeholderTextColorClassName="accent-slate-400"
             />
             {(field.state.meta.isTouched || form.state.submissionAttempts > 0) &&
               field.state.meta.errors.length > 0 && (
-              <Text style={authStyles.error}>{String(field.state.meta.errors[0])}</Text>
-            )}
+                <Text className={authClass.error}>{String(field.state.meta.errors[0])}</Text>
+              )}
           </View>
         )}
       </form.Field>
@@ -98,8 +95,8 @@ export default function RegistroScreen() {
           onSubmit: ({ value }) => validarContrasena(value),
         }}>
         {(field) => (
-          <View style={authStyles.group}>
-            <Text style={authStyles.label}>Contraseña</Text>
+          <View className={authClass.group}>
+            <Text className={authClass.label}>Contraseña</Text>
             <PasswordField
               hasError={field.state.meta.errors.length > 0}
               value={field.state.value}
@@ -114,8 +111,8 @@ export default function RegistroScreen() {
             />
             {(field.state.meta.isTouched || form.state.submissionAttempts > 0) &&
               field.state.meta.errors.length > 0 && (
-              <Text style={authStyles.error}>{String(field.state.meta.errors[0])}</Text>
-            )}
+                <Text className={authClass.error}>{String(field.state.meta.errors[0])}</Text>
+              )}
             <PasswordRequirements value={field.state.value} />
           </View>
         )}
@@ -140,8 +137,8 @@ export default function RegistroScreen() {
           },
         }}>
         {(field) => (
-          <View style={authStyles.group}>
-            <Text style={authStyles.label}>Confirmar contraseña</Text>
+          <View className={authClass.group}>
+            <Text className={authClass.label}>Confirmar contraseña</Text>
             <PasswordField
               hasError={field.state.meta.errors.length > 0}
               value={field.state.value}
@@ -153,8 +150,8 @@ export default function RegistroScreen() {
             />
             {(field.state.meta.isTouched || form.state.submissionAttempts > 0) &&
               field.state.meta.errors.length > 0 && (
-              <Text style={authStyles.error}>{String(field.state.meta.errors[0])}</Text>
-            )}
+                <Text className={authClass.error}>{String(field.state.meta.errors[0])}</Text>
+              )}
           </View>
         )}
       </form.Field>
@@ -162,17 +159,13 @@ export default function RegistroScreen() {
       <form.Subscribe selector={(s) => [s.canSubmit, s.isSubmitting] as const}>
         {([canSubmit, isSubmitting]) => (
           <Pressable
-            style={({ pressed }) => [
-              authStyles.button,
-              (!canSubmit || isSubmitting) && authStyles.buttonDisabled,
-              pressed && { opacity: 0.85 },
-            ]}
+            className={authClass.button}
             disabled={!canSubmit || isSubmitting}
             onPress={() => form.handleSubmit()}>
             {isSubmitting ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator colorClassName="accent-white" />
             ) : (
-              <Text style={authStyles.buttonText}>Registrarme</Text>
+              <Text className={authClass.buttonText}>Registrarme</Text>
             )}
           </Pressable>
         )}

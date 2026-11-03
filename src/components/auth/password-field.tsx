@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Pressable, Text, TextInput, type TextInputProps, View } from 'react-native';
 
-import { authStyles } from './auth-styles';
+import { authClass } from './auth-classes';
 
 type Props = Omit<TextInputProps, 'style' | 'secureTextEntry'> & {
   hasError?: boolean;
@@ -12,13 +12,13 @@ export function PasswordField({ hasError, ...props }: Props) {
   const [visible, setVisible] = useState(false);
 
   return (
-    <View style={[authStyles.inputRow, hasError && authStyles.inputError]}>
+    <View className={hasError ? authClass.inputRowError : authClass.inputRow}>
       <TextInput
         autoCapitalize="none"
         autoCorrect={false}
-        placeholderTextColor="#94A3B8"
+        placeholderTextColorClassName="accent-slate-400"
         {...props}
-        style={authStyles.inputInner}
+        className={authClass.inputInner}
         secureTextEntry={!visible}
       />
       <Pressable
@@ -26,7 +26,7 @@ export function PasswordField({ hasError, ...props }: Props) {
         accessibilityLabel={visible ? 'Ocultar contraseña' : 'Mostrar contraseña'}
         hitSlop={10}
         onPress={() => setVisible((v) => !v)}>
-        <Text style={authStyles.toggle}>{visible ? 'Ocultar' : 'Ver'}</Text>
+        <Text className={authClass.toggle}>{visible ? 'Ocultar' : 'Ver'}</Text>
       </Pressable>
     </View>
   );

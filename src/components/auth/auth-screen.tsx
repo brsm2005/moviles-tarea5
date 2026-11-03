@@ -1,10 +1,9 @@
 import type { ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { HeaderEpmaps } from '@/components/header-epmaps';
 
-import { authStyles } from './auth-styles';
+import { authClass } from './auth-classes';
 
 interface Props {
   title: string;
@@ -17,24 +16,24 @@ interface Props {
 /** Estructura común de las pantallas de autenticación. */
 export function AuthScreen({ title, subtitle, children, footer, headerSubtitle = 'Acceso' }: Props) {
   return (
-    <SafeAreaView style={authStyles.screen} edges={[]}>
+    <View className={authClass.screen}>
       <HeaderEpmaps subtitulo={headerSubtitle} />
       <KeyboardAvoidingView
-        style={authStyles.flex}
+        className={authClass.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={0}>
         <ScrollView
-          contentContainerStyle={authStyles.scroll}
+          contentContainerClassName={authClass.scroll}
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="interactive">
-          <View style={authStyles.card}>
-            <Text style={authStyles.title}>{title}</Text>
-            <Text style={authStyles.lead}>{subtitle}</Text>
+          <View className={authClass.card}>
+            <Text className={authClass.title}>{title}</Text>
+            <Text className={authClass.lead}>{subtitle}</Text>
             {children}
           </View>
           {footer}
         </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }

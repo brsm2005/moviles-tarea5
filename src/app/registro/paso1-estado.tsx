@@ -1,38 +1,56 @@
 import { useForm } from '@tanstack/react-form';
 import { useRouter } from 'expo-router';
 import {
-    KeyboardAvoidingView,
-    Platform,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BotonCancelarRegistro } from '@/components/boton-cancelar-registro';
 import { HeaderEpmaps } from '@/components/header-epmaps';
 import { ProgressBarRegistro } from '@/components/progress-bar-registro';
 import { useLecturaStore, type EstadoMedidor } from '@/features/lecturas/useLecturaStore';
 
-const C = {
-  primary: '#004B87',
-  accent: '#00A3E0',
-  warning: '#F59E0B',
-  error: '#EF4444',
-  bg: '#F8FAFC',
-  card: '#FFFFFF',
-};
-
-const ESTADOS: { valor: EstadoMedidor; etiqueta: string; color: string }[] = [
-  { valor: 'normal', etiqueta: 'Normal', color: C.accent },
-  { valor: 'inaccesible', etiqueta: 'Inaccesible', color: C.warning },
-  { valor: 'danado', etiqueta: 'Dañado', color: C.error },
+const ESTADOS: {
+  valor: EstadoMedidor;
+  etiqueta: string;
+  dot: string;
+  activeCard: string;
+  activeText: string;
+}[] = [
+  {
+    valor: 'normal',
+    etiqueta: 'Normal',
+    dot: 'bg-accent',
+    activeCard: 'border-accent bg-white',
+    activeText: 'text-accent',
+  },
+  {
+    valor: 'inaccesible',
+    etiqueta: 'Inaccesible',
+    dot: 'bg-amber-500',
+    activeCard: 'border-amber-500 bg-white',
+    activeText: 'text-amber-500',
+  },
+  {
+    valor: 'danado',
+    etiqueta: 'Dañado',
+    dot: 'bg-danger',
+    activeCard: 'border-danger bg-white',
+    activeText: 'text-danger',
+  },
 ];
 
 const MOTIVOS = ['Perro agresivo', 'Predio cerrado', 'Medidor bloqueado', 'Acceso peligroso'];
+
+const inputBase =
+  'font-roboto min-h-[52px] border-[1.5px] rounded-xl px-3.5 text-base text-slate-900 bg-card';
+const inputClass = `${inputBase} border-slate-300`;
+const inputErrorClass = `${inputBase} border-danger`;
 
 export default function Paso1EstadoScreen() {
   const router = useRouter();
@@ -54,26 +72,28 @@ export default function Paso1EstadoScreen() {
   });
 
   return (
-    <SafeAreaView style={styles.screen} edges={[]}>
+    <View className="flex-1 bg-background">
       <HeaderEpmaps subtitulo="Registro" />
       <BotonCancelarRegistro />
       <KeyboardAvoidingView
-        style={styles.flex}
+        className="flex-1"
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={0}>
         <ScrollView
-          contentContainerStyle={styles.scroll}
+          contentContainerClassName="p-5"
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="interactive">
           <ProgressBarRegistro pasoActual={1} />
-          <Text style={styles.title}>Estado del medidor</Text>
+          <Text className="font-roboto-bold text-2xl text-primary mt-0.5">Estado del medidor</Text>
           {!!store.getState().medidorCodigo && (
-            <Text style={styles.codigo}>{store.getState().medidorCodigo}</Text>
+            <Text className="font-roboto-bold text-base text-slate-600 mb-4">
+              {store.getState().medidorCodigo}
+            </Text>
           )}
 
           <form.Field name="estado">
             {(field) => (
-              <View style={styles.estados}>
+              <View className="gap-2.5 mt-2 mb-4">
                 {ESTADOS.map((e) => {
                   const activo = field.state.value === e.valor;
                   return (
@@ -85,12 +105,14 @@ export default function Paso1EstadoScreen() {
                         if (e.valor !== 'inaccesible') form.setFieldValue('motivo', '');
                         if (e.valor !== 'danado') form.setFieldValue('descripcion', '');
                       }}
-                      style={[
-                        styles.estadoCard,
-                        activo && { borderColor: e.color, backgroundColor: '#fff' },
-                      ]}>
-                      <View style={[styles.dot, { backgroundColor: e.color }]} />
-                      <Text style={[styles.estadoText, activo && { color: e.color }]}>
+                      className={`flex-row items-center min-h-[60px] px-4 rounded-xl border-2 bg-card shadow-sm active:opacity-90 ${
+                        activo ? e.activeCard : 'border-border'
+                      }`}>
+                      <View className={`w-3.5 h-3.5 rounded-full mr-3 ${e.dot}`} />
+                      <Text
+                        className={`font-roboto-medium text-lg ${
+                          activo ? e.activeText : 'text-slate-700'
+                        }`}>
                         {e.etiqueta}
                       </Text>
                     </Pressable>
@@ -104,18 +126,20 @@ export default function Paso1EstadoScreen() {
             {(estado) => (
               <>
                 {estado === 'inaccesible' && (
-                  <View style={styles.card}>
-                    <Text style={styles.label}>Motivo (obligatorio)</Text>
-                    <View style={styles.chips}>
+                  <View className="bg-card rounded-xl p-4 mb-4 shadow-sm">
+                    <Text className="font-roboto-medium text-sm text-primary mb-2">
+                      Motivo (obligatorio)
+                    </Text>
+                    <View className="flex-row flex-wrap gap-2 mb-3">
                       {MOTIVOS.map((m) => (
                         <Pressable
                           key={m}
-                          style={styles.chip}
+                          className="px-3 py-2 rounded-full bg-background border border-accent active:opacity-85"
                           onPress={() => {
                             form.setFieldValue('motivo', m);
                             store.getState().setMotivoInaccesibilidad(m);
                           }}>
-                          <Text style={styles.chipText}>{m}</Text>
+                          <Text className="font-roboto text-sm text-primary">{m}</Text>
                         </Pressable>
                       ))}
                     </View>
@@ -130,30 +154,36 @@ export default function Paso1EstadoScreen() {
                       {(field) => (
                         <>
                           <TextInput
-                            style={[styles.input, field.state.meta.errors.length > 0 && styles.inputError]}
+                            className={
+                              field.state.meta.errors.length > 0 ? inputErrorClass : inputClass
+                            }
                             value={field.state.value}
                             onChangeText={(t) => {
                               field.handleChange(t);
                               store.getState().setMotivoInaccesibilidad(t);
                             }}
                             placeholder="Describa el motivo"
-                            placeholderTextColor="#94A3B8"
+                            placeholderTextColorClassName="accent-slate-400"
                           />
                           {field.state.meta.errors.length > 0 && (
-                            <Text style={styles.error}>{String(field.state.meta.errors[0])}</Text>
+                            <Text className="font-roboto text-danger text-[13px] mt-1">
+                              {String(field.state.meta.errors[0])}
+                            </Text>
                           )}
                         </>
                       )}
                     </form.Field>
-                    <Text style={styles.hint}>
+                    <Text className="font-roboto text-[13px] text-muted mt-2.5">
                       La lectura queda bloqueada. Pasará directo a la confirmación.
                     </Text>
                   </View>
                 )}
 
                 {estado === 'danado' && (
-                  <View style={styles.card}>
-                    <Text style={styles.label}>Descripción del daño (obligatoria)</Text>
+                  <View className="bg-card rounded-xl p-4 mb-4 shadow-sm">
+                    <Text className="font-roboto-medium text-sm text-primary mb-2">
+                      Descripción del daño (obligatoria)
+                    </Text>
                     <form.Field
                       name="descripcion"
                       validators={{
@@ -165,11 +195,10 @@ export default function Paso1EstadoScreen() {
                       {(field) => (
                         <>
                           <TextInput
-                            style={[
-                              styles.input,
-                              styles.multiline,
-                              field.state.meta.errors.length > 0 && styles.inputError,
-                            ]}
+                            className={`${
+                              field.state.meta.errors.length > 0 ? inputErrorClass : inputClass
+                            } min-h-[100px] pt-3`}
+                            style={{ textAlignVertical: 'top' }}
                             value={field.state.value}
                             onChangeText={(t) => {
                               field.handleChange(t);
@@ -177,15 +206,17 @@ export default function Paso1EstadoScreen() {
                             }}
                             multiline
                             placeholder="Describa el daño del medidor"
-                            placeholderTextColor="#94A3B8"
+                            placeholderTextColorClassName="accent-slate-400"
                           />
                           {field.state.meta.errors.length > 0 && (
-                            <Text style={styles.error}>{String(field.state.meta.errors[0])}</Text>
+                            <Text className="font-roboto text-danger text-[13px] mt-1">
+                              {String(field.state.meta.errors[0])}
+                            </Text>
                           )}
                         </>
                       )}
                     </form.Field>
-                    <Text style={styles.hint}>
+                    <Text className="font-roboto text-[13px] text-muted mt-2.5">
                       La lectura es opcional y la foto será obligatoria en el Paso 3.
                     </Text>
                   </View>
@@ -204,14 +235,10 @@ export default function Paso1EstadoScreen() {
               const habilitado = completo;
               return (
                 <Pressable
-                  style={({ pressed }) => [
-                    styles.button,
-                    !habilitado && styles.disabled,
-                    pressed && { opacity: 0.85 },
-                  ]}
+                  className="min-h-14 rounded-xl bg-primary items-center justify-center mt-1 active:opacity-85 disabled:opacity-45"
                   disabled={!habilitado}
                   onPress={() => form.handleSubmit()}>
-                  <Text style={styles.buttonText}>
+                  <Text className="font-roboto-medium text-white text-lg">
                     {estado === 'inaccesible' ? 'Ir a confirmación' : 'Continuar a lectura'}
                   </Text>
                 </Pressable>
@@ -220,80 +247,6 @@ export default function Paso1EstadoScreen() {
           </form.Subscribe>
         </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: C.bg },
-  flex: { flex: 1 },
-  scroll: { padding: 20 },
-  step: { fontFamily: 'Roboto_400Regular', fontSize: 14, color: C.accent },
-  title: { fontFamily: 'Roboto_700Bold', fontSize: 24, color: C.primary, marginTop: 2 },
-  codigo: { fontFamily: 'Roboto_700Bold', fontSize: 16, color: '#475569', marginBottom: 16 },
-  estados: { gap: 10, marginTop: 8, marginBottom: 16 },
-  estadoCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    minHeight: 60,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: '#E2E8F0',
-    backgroundColor: C.card,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 2 },
-  },
-  dot: { width: 14, height: 14, borderRadius: 7, marginRight: 12 },
-  estadoText: { fontFamily: 'Roboto_500Medium', fontSize: 18, color: '#334155' },
-  card: {
-    backgroundColor: C.card,
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 2 },
-  },
-  label: { fontFamily: 'Roboto_500Medium', fontSize: 14, color: C.primary, marginBottom: 8 },
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 12 },
-  chip: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: C.bg,
-    borderWidth: 1,
-    borderColor: C.accent,
-  },
-  chipText: { fontFamily: 'Roboto_400Regular', fontSize: 14, color: C.primary },
-  input: {
-    fontFamily: 'Roboto_400Regular',
-    minHeight: 52,
-    borderWidth: 1.5,
-    borderColor: '#CBD5E1',
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    fontSize: 16,
-    color: '#0F172A',
-    backgroundColor: C.card,
-  },
-  multiline: { minHeight: 100, textAlignVertical: 'top', paddingTop: 12 },
-  inputError: { borderColor: C.error },
-  error: { fontFamily: 'Roboto_400Regular', color: C.error, fontSize: 13, marginTop: 4 },
-  hint: { fontFamily: 'Roboto_400Regular', color: '#64748B', fontSize: 13, marginTop: 10 },
-  button: {
-    minHeight: 56,
-    borderRadius: 12,
-    backgroundColor: C.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 4,
-  },
-  disabled: { opacity: 0.45 },
-  buttonText: { fontFamily: 'Roboto_500Medium', color: '#fff', fontSize: 18 },
-});

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import Animated, {
   interpolateColor,
   useAnimatedStyle,
@@ -17,6 +17,12 @@ const ETIQUETAS: Record<Exclude<FortalezaContrasena, 'vacia'>, string> = {
   debil: 'Contraseña débil ⚠️',
   media: 'Contraseña media 🟡',
   fuerte: 'Contraseña fuerte 💪',
+};
+
+const COLORES_TEXTO: Record<Exclude<FortalezaContrasena, 'vacia'>, string> = {
+  debil: 'text-red-600',
+  media: 'text-amber-600',
+  fuerte: 'text-green-600',
 };
 
 /** Barra animada que indica la seguridad de la contraseña mientras se escribe. */
@@ -51,39 +57,15 @@ export function IndicadorSeguridadContrasena({ fortaleza }: Props) {
   if (fortaleza === 'vacia') return null;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.track}>
-        <Animated.View style={[styles.fill, animatedBarStyle]} />
+    <View className="mt-1.5 gap-1">
+      <View className="h-1.5 bg-border rounded-full overflow-hidden">
+        <Animated.View className="h-full rounded-full" style={animatedBarStyle} />
       </View>
       <Text
         accessibilityLiveRegion="polite"
-        style={[styles.texto, styles[fortaleza]]}>
+        className={`text-xs font-roboto-medium ${COLORES_TEXTO[fortaleza]}`}>
         {ETIQUETAS[fortaleza]}
       </Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 6,
-    gap: 4,
-  },
-  track: {
-    height: 6,
-    backgroundColor: '#E2E8F0',
-    borderRadius: 3,
-    overflow: 'hidden',
-  },
-  fill: {
-    height: '100%',
-    borderRadius: 3,
-  },
-  texto: {
-    fontSize: 12,
-    fontFamily: 'Roboto_500Medium',
-  },
-  debil: { color: '#DC2626' },
-  media: { color: '#D97706' },
-  fuerte: { color: '#16A34A' },
-});

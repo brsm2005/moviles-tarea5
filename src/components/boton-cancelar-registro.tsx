@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, Text, View } from 'react-native';
 
 import { cancelarRegistro } from '@/features/lecturas/borrador.service';
 
@@ -23,27 +23,13 @@ export function BotonCancelarRegistro() {
   };
 
   return (
-    <View style={styles.bar}>
+    <View className="px-5 pt-2.5 bg-background">
       <Pressable
         accessibilityRole="button"
         onPress={confirmar}
-        style={({ pressed }) => [styles.btn, pressed && { opacity: 0.85 }]}>
-        <Text style={styles.text}>Cancelar registro</Text>
+        className="min-h-11 rounded-xl border-2 border-danger bg-white items-center justify-center active:opacity-85">
+        <Text className="font-roboto-medium text-base text-danger">Cancelar registro</Text>
       </Pressable>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  bar: { paddingHorizontal: 20, paddingTop: 10, backgroundColor: '#F8FAFC' },
-  btn: {
-    minHeight: 44,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: '#EF4444',
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: { fontFamily: 'Roboto_500Medium', fontSize: 16, color: '#EF4444' },
-});

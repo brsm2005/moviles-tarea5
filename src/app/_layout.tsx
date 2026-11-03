@@ -1,3 +1,5 @@
+import '../../global.css';
+
 import {
   Roboto_400Regular,
   Roboto_500Medium,
@@ -8,6 +10,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
+import { SafeAreaListener } from 'react-native-safe-area-context';
+import { Uniwind } from 'uniwind';
 
 import { getDb } from '@/db/database';
 import { AppAlertHost } from '@/components/app-alert';
@@ -45,9 +49,11 @@ export default function RootLayout() {
   if (!listo) return null;
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Stack screenOptions={{ headerShown: false }} />
-      <AppAlertHost />
-    </QueryClientProvider>
+    <SafeAreaListener onChange={({ insets }) => Uniwind.updateInsets(insets)}>
+      <QueryClientProvider client={queryClient}>
+        <Stack screenOptions={{ headerShown: false }} />
+        <AppAlertHost />
+      </QueryClientProvider>
+    </SafeAreaListener>
   );
 }

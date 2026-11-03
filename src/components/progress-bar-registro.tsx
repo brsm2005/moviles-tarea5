@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -30,46 +30,18 @@ export function ProgressBarRegistro({ pasoActual }: Props) {
   }));
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerRow}>
-        <Text style={styles.pasoTexto}>Paso {pasoActual} de {TOTAL_PASOS}</Text>
-        <Text style={styles.porcentajeTexto}>{Math.round(porcentaje)}%</Text>
+    <View className="mb-4">
+      <View className="flex-row justify-between mb-1.5">
+        <Text className="text-[13px] font-roboto-medium text-primary">
+          Paso {pasoActual} de {TOTAL_PASOS}
+        </Text>
+        <Text className="text-[13px] font-roboto-bold text-secondary">
+          {Math.round(porcentaje)}%
+        </Text>
       </View>
-      <View style={styles.track}>
-        <Animated.View style={[styles.fill, animatedBarStyle]} />
+      <View className="h-2 bg-border rounded-full overflow-hidden">
+        <Animated.View className="h-full bg-primary rounded-full" style={animatedBarStyle} />
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 16,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-  },
-  pasoTexto: {
-    fontSize: 13,
-    fontFamily: 'Roboto_500Medium',
-    color: '#004B87',
-  },
-  porcentajeTexto: {
-    fontSize: 13,
-    fontFamily: 'Roboto_700Bold',
-    color: '#0076C6',
-  },
-  track: {
-    height: 8,
-    backgroundColor: '#E2E8F0',
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  fill: {
-    height: '100%',
-    backgroundColor: '#004B87',
-    borderRadius: 4,
-  },
-});

@@ -11,6 +11,7 @@ import Animated, {
 interface Props {
   visible: boolean;
   children: ReactNode;
+  className?: string;
   style?: StyleProp<ViewStyle>;
   offset?: number;
   duration?: number;
@@ -20,6 +21,7 @@ interface Props {
 export function FadeSlideIn({
   visible,
   children,
+  className,
   style,
   offset = -20,
   duration = 300,
@@ -47,5 +49,9 @@ export function FadeSlideIn({
 
   if (!visible) return null;
 
-  return <Animated.View style={[style, animatedStyle]}>{children}</Animated.View>;
+  return (
+    <Animated.View className={className} style={[style, animatedStyle]}>
+      {children}
+    </Animated.View>
+  );
 }

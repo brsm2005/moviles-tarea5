@@ -6,7 +6,7 @@ import { ActivityIndicator, Pressable, Text, TextInput, View } from 'react-nativ
 import { appAlert } from '@/components/app-alert';
 import { AnimatedSpinner } from '@/components/animations/animated-spinner';
 import { AuthScreen } from '@/components/auth/auth-screen';
-import { AUTH_COLORS, authStyles } from '@/components/auth/auth-styles';
+import { authClass } from '@/components/auth/auth-classes';
 import { mensajeErrorAuth } from '@/features/auth/auth.errors';
 import { actualizarNombre, getSession, type Session } from '@/features/auth/auth.service';
 import { DISPLAY_NAME_MAX_LENGTH, validarNombre } from '@/features/auth/profile';
@@ -26,8 +26,8 @@ export default function EditarNombreScreen() {
 
   if (session === undefined) {
     return (
-      <View style={[authStyles.screen, { alignItems: 'center', justifyContent: 'center' }]}>
-        <AnimatedSpinner size={48} color={AUTH_COLORS.primary} />
+      <View className="flex-1 bg-background items-center justify-center">
+        <AnimatedSpinner size={48} />
       </View>
     );
   }
@@ -72,19 +72,19 @@ function EditarNombreForm({ session }: { session: Session }) {
       subtitle="Actualiza el nombre que se muestra en tu cuenta de EPMAPS Campo."
       headerSubtitle="Mi cuenta"
       footer={
-        <Pressable style={authStyles.footer} onPress={() => router.replace('/busqueda' as never)}>
-          <Text style={authStyles.footerText}>
-            <Text style={authStyles.footerLink}>Volver a la búsqueda</Text>
+        <Pressable className={authClass.footer} onPress={() => router.replace('/busqueda' as never)}>
+          <Text className={authClass.footerText}>
+            <Text className={authClass.footerLink}>Volver a la búsqueda</Text>
           </Text>
         </Pressable>
       }>
-      <View style={authStyles.sessionBox}>
-        <Text style={authStyles.sessionLabel}>Cuenta</Text>
-        <Text style={authStyles.sessionValue}>{session.email}</Text>
+      <View className={authClass.sessionBox}>
+        <Text className={authClass.sessionLabel}>Cuenta</Text>
+        <Text className={authClass.sessionValue}>{session.email}</Text>
         {!!nombreActual && (
           <>
-            <Text style={[authStyles.sessionLabel, { marginTop: 10 }]}>Nombre actual</Text>
-            <Text style={authStyles.sessionValue}>{nombreActual}</Text>
+            <Text className={`${authClass.sessionLabel} mt-2.5`}>Nombre actual</Text>
+            <Text className={authClass.sessionValue}>{nombreActual}</Text>
           </>
         )}
       </View>
@@ -96,13 +96,12 @@ function EditarNombreForm({ session }: { session: Session }) {
           onSubmit: ({ value }) => validarNombre(value),
         }}>
         {(field) => (
-          <View style={authStyles.group}>
-            <Text style={authStyles.label}>Nombre del usuario</Text>
+          <View className={authClass.group}>
+            <Text className={authClass.label}>Nombre del usuario</Text>
             <TextInput
-              style={[
-                authStyles.input,
-                field.state.meta.errors.length > 0 && authStyles.inputError,
-              ]}
+              className={
+                field.state.meta.errors.length > 0 ? authClass.inputError : authClass.input
+              }
               value={field.state.value}
               onChangeText={field.handleChange}
               onBlur={field.handleBlur}
@@ -112,13 +111,13 @@ function EditarNombreForm({ session }: { session: Session }) {
               textContentType="name"
               autoComplete="name"
               placeholder="Ej. Bryan Salvador"
-              placeholderTextColor="#94A3B8"
+              placeholderTextColorClassName="accent-slate-400"
             />
             {(field.state.meta.isTouched || form.state.submissionAttempts > 0) &&
               field.state.meta.errors.length > 0 && (
-              <Text style={authStyles.error}>{String(field.state.meta.errors[0])}</Text>
-            )}
-            <Text style={authStyles.hint}>
+                <Text className={authClass.error}>{String(field.state.meta.errors[0])}</Text>
+              )}
+            <Text className={authClass.hint}>
               El nombre se guarda con updateProfile de Firebase en tu cuenta autenticada.
             </Text>
           </View>
@@ -128,17 +127,13 @@ function EditarNombreForm({ session }: { session: Session }) {
       <form.Subscribe selector={(s) => [s.canSubmit, s.isSubmitting] as const}>
         {([canSubmit, isSubmitting]) => (
           <Pressable
-            style={({ pressed }) => [
-              authStyles.button,
-              (!canSubmit || isSubmitting) && authStyles.buttonDisabled,
-              pressed && { opacity: 0.85 },
-            ]}
+            className={authClass.button}
             disabled={!canSubmit || isSubmitting}
             onPress={() => form.handleSubmit()}>
             {isSubmitting ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator colorClassName="accent-white" />
             ) : (
-              <Text style={authStyles.buttonText}>Guardar nombre</Text>
+              <Text className={authClass.buttonText}>Guardar nombre</Text>
             )}
           </Pressable>
         )}

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -23,71 +23,29 @@ export function HeaderEpmaps({ subtitulo = 'Lecturas de campo' }: { subtitulo?: 
   }));
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View
+      className="bg-primary rounded-b-[20px] pb-3.5 shadow-lg shadow-primary/30"
+      style={{ paddingTop: insets.top }}>
       <NetworkStatusBar />
-      <View style={styles.brandRow}>
-        <View style={styles.logoChip}>
+      <View className="flex-row items-center justify-center gap-3.5 pt-3">
+        <View className="bg-white rounded-2xl px-2 py-1">
           <Image
             resizeMode="contain"
             source={require('../../assets/images/EPMAPS.jpeg')}
-            style={styles.logo}
+            className="w-24 h-11"
           />
         </View>
         <View>
-          <Text style={styles.brand}>EPMAPS</Text>
-          <Text style={styles.subtitle}>{subtitulo}</Text>
+          <Text className="font-roboto-bold text-[26px] text-white tracking-[3px]">EPMAPS</Text>
+          <Text className="font-roboto-medium text-xs text-sky-300 tracking-[1.5px] uppercase">
+            {subtitulo}
+          </Text>
         </View>
       </View>
-      <Animated.View style={[styles.accent, accentStyle]} />
+      <Animated.View
+        className="h-[3px] rounded-full bg-accent self-center mt-3"
+        style={accentStyle}
+      />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#004B87',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    paddingBottom: 14,
-    elevation: 4,
-    shadowColor: '#004B87',
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
-  },
-  brandRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 14,
-    paddingTop: 12,
-  },
-  logoChip: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-  logo: { width: 96, height: 44 },
-  brand: {
-    fontFamily: 'Roboto_700Bold',
-    fontSize: 26,
-    color: '#FFFFFF',
-    letterSpacing: 3,
-  },
-  subtitle: {
-    fontFamily: 'Roboto_500Medium',
-    fontSize: 12,
-    color: '#7DD3FC',
-    letterSpacing: 1.5,
-    textTransform: 'uppercase',
-  },
-  accent: {
-    height: 3,
-    width: 56,
-    borderRadius: 2,
-    backgroundColor: '#00A3E0',
-    alignSelf: 'center',
-    marginTop: 12,
-  },
-});

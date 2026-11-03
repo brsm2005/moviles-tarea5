@@ -4,7 +4,7 @@ import { ActivityIndicator, Pressable, Text, TextInput, View } from 'react-nativ
 
 import { appAlert } from '@/components/app-alert';
 import { AuthScreen } from '@/components/auth/auth-screen';
-import { authStyles } from '@/components/auth/auth-styles';
+import { authClass } from '@/components/auth/auth-classes';
 import { mensajeErrorAuth } from '@/features/auth/auth.errors';
 import { recuperarContrasena } from '@/features/auth/auth.service';
 import { validarEmail } from '@/features/auth/password';
@@ -35,10 +35,10 @@ export default function RecuperarContrasenaScreen() {
       subtitle="Ingresa el correo de tu cuenta y te enviaremos un enlace para restablecer la contraseña."
       headerSubtitle="Recuperar acceso"
       footer={
-        <Pressable style={authStyles.footer} onPress={() => router.replace('/' as never)}>
-          <Text style={authStyles.footerText}>
+        <Pressable className={authClass.footer} onPress={() => router.replace('/' as never)}>
+          <Text className={authClass.footerText}>
             ¿Recordaste tu contraseña?{' '}
-            <Text style={authStyles.footerLink}>Inicia sesión</Text>
+            <Text className={authClass.footerLink}>Inicia sesión</Text>
           </Text>
         </Pressable>
       }>
@@ -49,13 +49,12 @@ export default function RecuperarContrasenaScreen() {
           onSubmit: ({ value }) => validarEmail(value),
         }}>
         {(field) => (
-          <View style={authStyles.group}>
-            <Text style={authStyles.label}>Correo electrónico</Text>
+          <View className={authClass.group}>
+            <Text className={authClass.label}>Correo electrónico</Text>
             <TextInput
-              style={[
-                authStyles.input,
-                field.state.meta.errors.length > 0 && authStyles.inputError,
-              ]}
+              className={
+                field.state.meta.errors.length > 0 ? authClass.inputError : authClass.input
+              }
               value={field.state.value}
               onChangeText={field.handleChange}
               onBlur={field.handleBlur}
@@ -65,13 +64,13 @@ export default function RecuperarContrasenaScreen() {
               autoComplete="email"
               textContentType="emailAddress"
               placeholder="tecnico@epmaps.gob.ec"
-              placeholderTextColor="#94A3B8"
+              placeholderTextColorClassName="accent-slate-400"
             />
             {(field.state.meta.isTouched || form.state.submissionAttempts > 0) &&
               field.state.meta.errors.length > 0 && (
-              <Text style={authStyles.error}>{String(field.state.meta.errors[0])}</Text>
-            )}
-            <Text style={authStyles.hint}>
+                <Text className={authClass.error}>{String(field.state.meta.errors[0])}</Text>
+              )}
+            <Text className={authClass.hint}>
               El enlace lo envía Firebase Auth y llegará en español.
             </Text>
           </View>
@@ -81,17 +80,13 @@ export default function RecuperarContrasenaScreen() {
       <form.Subscribe selector={(s) => [s.canSubmit, s.isSubmitting] as const}>
         {([canSubmit, isSubmitting]) => (
           <Pressable
-            style={({ pressed }) => [
-              authStyles.button,
-              (!canSubmit || isSubmitting) && authStyles.buttonDisabled,
-              pressed && { opacity: 0.85 },
-            ]}
+            className={authClass.button}
             disabled={!canSubmit || isSubmitting}
             onPress={() => form.handleSubmit()}>
             {isSubmitting ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator colorClassName="accent-white" />
             ) : (
-              <Text style={authStyles.buttonText}>Enviar enlace</Text>
+              <Text className={authClass.buttonText}>Enviar enlace</Text>
             )}
           </Pressable>
         )}

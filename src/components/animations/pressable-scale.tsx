@@ -14,6 +14,7 @@ import Animated, {
 
 interface Props extends Omit<PressableProps, 'style' | 'children'> {
   children: ReactNode;
+  className?: string;
   style?: StyleProp<ViewStyle>;
   scaleTo?: number;
 }
@@ -21,6 +22,7 @@ interface Props extends Omit<PressableProps, 'style' | 'children'> {
 /** Tarjeta/botón que se contrae suavemente al presionar. */
 export function PressableScale({
   children,
+  className,
   style,
   scaleTo = 0.97,
   disabled,
@@ -50,7 +52,9 @@ export function PressableScale({
       disabled={disabled}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}>
-      <Animated.View style={[style, animatedStyle]}>{children}</Animated.View>
+      <Animated.View className={className} style={[style, animatedStyle]}>
+        {children}
+      </Animated.View>
     </Pressable>
   );
 }

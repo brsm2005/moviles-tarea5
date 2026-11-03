@@ -1,6 +1,6 @@
 import NetInfo from '@react-native-community/netinfo';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { PulseView } from '@/components/animations/pulse-view';
 import { getDb } from '@/db/database';
@@ -38,47 +38,38 @@ export function NetworkStatusBar() {
     };
   }, []);
 
+  const hayPendientes = pendientes > 0;
+
   return (
-    <View style={styles.bar}>
-      <View style={[styles.pill, { backgroundColor: online ? '#DCFCE7' : '#FEF3C7' }]}>
-        <PulseView active={!online} style={styles.dotWrapper}>
-          <View style={[styles.dot, { backgroundColor: online ? '#10B981' : '#F59E0B' }]} />
+    <View className="flex-row justify-between items-center px-4 pt-2">
+      <View
+        className={`flex-row items-center gap-1.5 px-3 py-1 rounded-full ${
+          online ? 'bg-success-soft' : 'bg-warning-soft'
+        }`}>
+        <PulseView active={!online} className="items-center justify-center">
+          <View className={`w-2 h-2 rounded-full ${online ? 'bg-emerald-500' : 'bg-amber-500'}`} />
         </PulseView>
-        <Text style={[styles.text, { color: online ? '#166534' : '#92400E' }]}>
+        <Text
+          className={`font-roboto-medium text-[13px] ${
+            online ? 'text-emerald-800' : 'text-amber-800'
+          }`}>
           {online ? 'Con red' : 'Sin red'}
         </Text>
       </View>
-      <View style={[styles.pill, { backgroundColor: pendientes > 0 ? '#FEF3C7' : 'rgba(255,255,255,0.18)' }]}>
-        <PulseView active={pendientes > 0} style={styles.dotWrapper}>
-          <View
-            style={[styles.dot, { backgroundColor: pendientes > 0 ? '#D97706' : '#FFFFFF' }]}
-          />
+      <View
+        className={`flex-row items-center gap-1.5 px-3 py-1 rounded-full ${
+          hayPendientes ? 'bg-warning-soft' : 'bg-white/20'
+        }`}>
+        <PulseView active={hayPendientes} className="items-center justify-center">
+          <View className={`w-2 h-2 rounded-full ${hayPendientes ? 'bg-warning' : 'bg-white'}`} />
         </PulseView>
-        <Text style={[styles.text, { color: pendientes > 0 ? '#92400E' : '#FFFFFF' }]}>
+        <Text
+          className={`font-roboto-medium text-[13px] ${
+            hayPendientes ? 'text-amber-800' : 'text-white'
+          }`}>
           Pendientes: {pendientes}
         </Text>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  bar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 8,
-  },
-  pill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 999,
-  },
-  dot: { width: 8, height: 8, borderRadius: 4 },
-  dotWrapper: { alignItems: 'center', justifyContent: 'center' },
-  text: { fontFamily: 'Roboto_500Medium', fontSize: 13 },
-});
